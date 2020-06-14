@@ -4,7 +4,7 @@ import 'package:stash/src/api/cache_entry.dart';
 
 /// Extensions to a [CacheEntry] to provide support to Sembast
 extension SembastExtensions on CacheEntry {
-  /// Checks if the [value] is one of the base datatypes supported by Hive either returning that value if it is or
+  /// Checks if the [value] is one of the base datatypes supported by Sembast either returning that value if it is or
   /// invoking toJson to transform it in a supported value
   ///
   /// * [value]: the value to convert
