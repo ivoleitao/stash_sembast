@@ -9,6 +9,7 @@ environment:
   sdk: ">=2.8.4 <3.0.0"
 
 dependencies:
+  path: ^1.7.0
   sembast: ^2.4.5
   stash: ^1.0.0-dev.1
   #stash:
