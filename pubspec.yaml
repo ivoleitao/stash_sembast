@@ -6,12 +6,12 @@ description: >-
 homepage: https://github.com/ivoleitao/stash_sembast
 
 environment:
-  sdk: ">=2.8.1 <3.0.0"
+  sdk: ">=2.9.0 <3.0.0"
 
 dependencies:
   path: ^1.7.0
-  sembast: ^2.4.7+4
-  stash: ^1.0.0-dev.2
+  sembast: ^2.4.7+6
+  stash: ^1.0.0-dev.3
   #stash:
   #  path: ../stash
 
