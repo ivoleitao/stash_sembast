@@ -1,6 +1,6 @@
 ## 1.0.1
 
-- TODO
+- Updated depenencies
 
 ## 1.0.0
 
