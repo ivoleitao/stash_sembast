@@ -40,7 +40,7 @@ extension SembastExtensions on CacheEntry {
       json['expiryTime'] == null
           ? null
           : DateTime.parse(json['expiryTime'] as String),
-      creationTime: json['creationTime'] == null
+      json['creationTime'] == null
           ? null
           : DateTime.parse(json['creationTime'] as String),
       accessTime: json['accessTime'] == null
