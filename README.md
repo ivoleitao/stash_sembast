@@ -18,7 +18,7 @@ Add this to your `pubspec.yaml` (or create it):
 
 ```dart
 dependencies:
-    stash_sembast: ^1.0.2
+    stash_sembast: ^2.0.0-nullsafety.1
 ```
 
 Run the following command to install dependencies:
