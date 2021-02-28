@@ -13,10 +13,10 @@ class SembastStore extends CacheStore {
 
   /// The function that converts between the Map representation to the
   /// object stored in the cache
-  final dynamic Function(Map<String, dynamic>) _fromEncodable;
+  final dynamic Function(Map<String, dynamic>)? _fromEncodable;
 
   /// The Sembast database object
-  Database _db;
+  Database? _db;
 
   /// List of Sembast stores per cache name
   final Map<String, StoreRef<String, Map<String, dynamic>>> _cacheStoreMap = {};
@@ -26,7 +26,7 @@ class SembastStore extends CacheStore {
   /// * [_path]: The base location of the Sembast storage
   /// * [fromEncodable]: A custom function the converts to the object from a `Map<String, dynamic>` representation
   SembastStore(this._path,
-      {dynamic Function(Map<String, dynamic>) fromEncodable})
+      {dynamic Function(Map<String, dynamic>)? fromEncodable})
       : _fromEncodable = fromEncodable;
 
   /// Returns the [CacheDao] that provides access to the stored objects.
@@ -49,12 +49,13 @@ class SembastStore extends CacheStore {
 
     return getDB.then((db) {
       if (_cacheStoreMap.containsKey(name)) {
-        return CacheDao(db, _cacheStoreMap[name]);
+        return CacheDao(db, _cacheStoreMap[name]!);
       }
 
-      _cacheStoreMap[name] = StoreRef<String, Map<String, dynamic>>(name);
+      final cacheStore =
+          _cacheStoreMap[name] = StoreRef<String, Map<String, dynamic>>(name);
 
-      return CacheDao(db, _cacheStoreMap[name]);
+      return CacheDao(db, cacheStore);
     });
   }
 
@@ -70,7 +71,7 @@ class SembastStore extends CacheStore {
   /// * [value]: The json map
   ///
   ///  Returns the corresponding [CacheEntry]
-  CacheEntry _getEntryFromValue(Map<String, dynamic> value) {
+  CacheEntry? _getEntryFromValue(Map<String, dynamic>? value) {
     return value != null
         ? SembastExtensions.fromJson(value, fromJson: _fromEncodable)
         : null;
@@ -81,8 +82,8 @@ class SembastStore extends CacheStore {
   /// * [value]: The json map
   ///
   ///  Returns the corresponding [CacheStat]
-  CacheStat _getStatFromValue(Map<String, dynamic> value) {
-    return _getEntryFromValue(value).stat;
+  CacheStat? _getStatFromValue(Map<String, dynamic> value) {
+    return _getEntryFromValue(value)?.stat;
   }
 
   /// Calls the [CacheDao] and retries a [CacheEntry] by key
@@ -91,7 +92,7 @@ class SembastStore extends CacheStore {
   /// * [key]: The cache key
   ///
   ///  Returns the corresponding [CacheEntry]
-  Future<CacheEntry> _getEntryFromStore(CacheDao dao, String key) =>
+  Future<CacheEntry?> _getEntryFromStore(CacheDao dao, String key) =>
       dao.getByKey(key).then(_getEntryFromValue);
 
   /// Returns the [CacheEntry] for the named cache value specified [key].
@@ -100,7 +101,7 @@ class SembastStore extends CacheStore {
   /// * [key]: The cache key
   ///
   /// Returns a [CacheEntry]
-  Future<CacheEntry> _getEntry(String name, String key) {
+  Future<CacheEntry?> _getEntry(String name, String key) {
     return _cacheStore(name).then((dao) => _getEntryFromStore(dao, key));
   }
 
@@ -116,25 +117,29 @@ class SembastStore extends CacheStore {
 
   @override
   Future<Iterable<CacheStat>> stats(String name) =>
-      _getRecords(name).then((records) =>
-          records.map((record) => _getStatFromValue(record.value)).toList());
+      _getRecords(name).then((records) => records
+          .map((record) => _getStatFromValue(record.value))
+          .map((stat) => stat!)
+          .toList());
 
   @override
   Future<Iterable<CacheEntry>> values(String name) =>
-      _getRecords(name).then((records) =>
-          records.map((record) => _getEntryFromValue(record.value)).toList());
+      _getRecords(name).then((records) => records
+          .map((record) => _getEntryFromValue(record.value))
+          .map((entry) => entry!)
+          .toList());
 
   @override
   Future<bool> containsKey(String name, String key) =>
       _cacheStore(name).then((dao) => dao.exists(key));
 
   @override
-  Future<CacheStat> getStat(String name, String key) {
-    return _getEntry(name, key).then((entry) => entry.stat);
+  Future<CacheStat?> getStat(String name, String key) {
+    return _getEntry(name, key).then((entry) => entry?.stat);
   }
 
   @override
-  Future<Iterable<CacheStat>> getStats(String name, Iterable<String> keys) {
+  Future<Iterable<CacheStat?>> getStats(String name, Iterable<String> keys) {
     return _cacheStore(name).then((dao) => dao.getByKeys(keys)).then(
         (records) =>
             records.map((record) => _getEntryFromValue(record)).toList());
@@ -144,12 +149,12 @@ class SembastStore extends CacheStore {
   Future<void> setStat(String name, String key, CacheStat stat) {
     return _cacheStore(name).then((dao) {
       return _getEntryFromStore(dao, key)
-          .then((entry) => dao.put(key, (entry..stat = stat).toSembastJson()));
+          .then((entry) => dao.put(key, (entry!..stat = stat).toSembastJson()));
     });
   }
 
   @override
-  Future<CacheEntry> getEntry(String name, String key) {
+  Future<CacheEntry?> getEntry(String name, String key) {
     return _getEntry(name, key);
   }
 

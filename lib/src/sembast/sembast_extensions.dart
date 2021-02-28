@@ -29,7 +29,7 @@ extension SembastExtensions on CacheEntry {
   /// * [json]: the serialized json map stored in Sembast
   /// * [fromJson]: optional function to convert the value to the object stored in the cache
   static CacheEntry fromJson(Map<String, dynamic> json,
-      {dynamic Function(Map<String, dynamic>) fromJson}) {
+      {dynamic Function(Map<String, dynamic>)? fromJson}) {
     return CacheEntry(
       json['key'] as String,
       json['value'] == null
@@ -37,19 +37,15 @@ extension SembastExtensions on CacheEntry {
           : fromJson != null
               ? fromJson((json['value'] as Map).cast<String, dynamic>())
               : json['value'],
-      json['expiryTime'] == null
-          ? null
-          : DateTime.parse(json['expiryTime'] as String),
-      creationTime: json['creationTime'] == null
-          ? null
-          : DateTime.parse(json['creationTime'] as String),
+      DateTime.parse(json['expiryTime'] as String),
+      DateTime.parse(json['creationTime'] as String),
       accessTime: json['accessTime'] == null
           ? null
           : DateTime.parse(json['accessTime'] as String),
       updateTime: json['updateTime'] == null
           ? null
           : DateTime.parse(json['updateTime'] as String),
-      hitCount: json['hitCount'] as int,
+      hitCount: json['hitCount'] as int?,
     );
   }
 
@@ -57,10 +53,10 @@ extension SembastExtensions on CacheEntry {
   /// structure
   Map<String, dynamic> toSembastJson() => <String, dynamic>{
         'key': key,
-        'expiryTime': expiryTime?.toIso8601String(),
-        'creationTime': creationTime?.toIso8601String(),
-        'accessTime': accessTime?.toIso8601String(),
-        'updateTime': updateTime?.toIso8601String(),
+        'expiryTime': expiryTime.toIso8601String(),
+        'creationTime': creationTime.toIso8601String(),
+        'accessTime': accessTime.toIso8601String(),
+        'updateTime': updateTime.toIso8601String(),
         'hitCount': hitCount,
         'value': _toJsonValue(value),
       };

@@ -29,7 +29,7 @@ class CacheDao {
   /// * [filter]: The [Filter]
   ///
   /// Returns the number of entries
-  Future<int> count({Filter filter}) {
+  Future<int> count({Filter? filter}) {
     return _store.count(_db, filter: filter);
   }
 
@@ -38,7 +38,7 @@ class CacheDao {
   /// * [finder]: The [Finder]
   ///
   /// Returns the number of entries
-  Future<List<String>> keys({Finder finder}) {
+  Future<List<String>> keys({Finder? finder}) {
     return _store.findKeys(_db, finder: finder);
   }
 
@@ -47,7 +47,7 @@ class CacheDao {
   /// * [key]: The cache key
   ///
   /// Returns the key json map
-  Future<Map<String, dynamic>> getByKey(String key) {
+  Future<Map<String, dynamic>?> getByKey(String key) {
     return _store.record(key).get(_db);
   }
 
@@ -56,7 +56,7 @@ class CacheDao {
   /// * [keys]: The list of cache keys
   ///
   /// Returns the key json map
-  Future<List<Map<String, dynamic>>> getByKeys(Iterable<String> keys) {
+  Future<List<Map<String, dynamic>?>> getByKeys(Iterable<String> keys) {
     return _store.records(keys).get(_db);
   }
 
@@ -65,7 +65,7 @@ class CacheDao {
   ///
   /// * [finder]: The [Finder]
   Future<List<RecordSnapshot<String, Map<String, dynamic>>>> find(
-      {Finder finder}) {
+      {Finder? finder}) {
     return _store.find(_db, finder: finder);
   }
 
@@ -77,7 +77,7 @@ class CacheDao {
   ///
   /// Returns the updated value
   Future<Map<String, dynamic>> put(String key, Map<String, dynamic> value,
-      {bool merge}) {
+      {bool? merge}) {
     return _store.record(key).put(_db, value, merge: merge);
   }
 

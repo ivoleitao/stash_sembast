@@ -19,13 +19,13 @@ export 'src/sembast/sembast_store.dart';
 ///
 /// Returns a new [Cache] backed by a [SembastStore]
 Cache newSembastCache(String path,
-    {String cacheName,
-    ExpiryPolicy expiryPolicy,
-    KeySampler sampler,
-    EvictionPolicy evictionPolicy,
-    int maxEntries,
-    CacheLoader cacheLoader,
-    dynamic Function(dynamic) fromEncodable}) {
+    {String? cacheName,
+    ExpiryPolicy? expiryPolicy,
+    KeySampler? sampler,
+    EvictionPolicy? evictionPolicy,
+    int? maxEntries,
+    CacheLoader? cacheLoader,
+    dynamic Function(dynamic)? fromEncodable}) {
   return Cache.newCache(SembastStore(path, fromEncodable: fromEncodable),
       name: cacheName,
       expiryPolicy: expiryPolicy,
